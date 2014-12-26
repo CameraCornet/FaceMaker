@@ -172,8 +172,8 @@
         r._draw_image(layer);
         break;
       default:
-        break;
         console.log(layer.type + " is not a valid layer type");
+        break;
     }
   };
 

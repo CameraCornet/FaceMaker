@@ -269,7 +269,11 @@
     });
 
     fm.renderer.stop_rendering();
-    fm.magicParse("test $sin(pi*#DWFSS#)>50||sin(pi*#DWFSS#)<60?#DWFSS#+5:2$ value");
+    try {
+       fm.magicParse("test $sin(pi*#DWFSS#)>50||sin(pi*#DWFSS#)<60?#DWFSS#+5:2$ value");
+    } catch(err0) {
+       console.error("magicParse exception");
+    };
   </script>
   <style id="font-config"></style>
 
