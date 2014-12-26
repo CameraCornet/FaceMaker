@@ -1,6 +1,20 @@
 (function(FM) {
 
-  var R = function(fm) { 
+  var onFrame = 0;
+  var onFrameRendered = 0;
+  var skippedFrames = 0;
+  var fps,fpsInterval,startTime,now,then,elapsed;
+  var fpsCheckupOnFrame = 0;
+  var fpsCheckupTimer = null;
+  var fpsOutput0="?";
+
+  var calculateCurrentFrameRate = function() {
+     // 3000ms measurement period
+     fpsOutput0 = (onFrameRendered - fpsCheckupOnFrame) / 3;
+     fpsCheckupOnFrame = onFrameRendered;
+  };
+
+  var R = function(fm) {
     var r = this;
 
     r.options = fm.options;
@@ -39,6 +53,16 @@
   R.prototype.start_rendering = function() {
     var r = this;
 
+    // FPS throttle reference: http://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
+    // divide 1000 ms per second by FPS
+    fps=30;
+    fpsInterval=1000/fps;
+    then=Date.now();
+    startTime=then;
+    if (fpsCheckupTimer == null) {
+       fpsCheckupTimer = setInterval(calculateCurrentFrameRate, 3000);
+    };
+
     r.rendering = true;
     requestAnimationFrame(r.render.bind(r));
   };
@@ -56,7 +80,23 @@
       return;
     }
 
+    onFrame++;
     requestAnimationFrame(r.render.bind(r));
+
+    // calc elapsed time since last loop
+
+    now = Date.now();
+    elapsed = now - then;
+
+    // if enough time has elapsed, draw the next frame
+
+    if (elapsed < fpsInterval) {
+       skippedFrames++;
+       return;
+    }
+
+    onFrameRendered++;
+    then = now - (elapsed % fpsInterval);
 
     c.imageSmoothingEnabled = true;
 
@@ -68,7 +108,7 @@
 
 
     c.beginPath();
-    
+
     switch(fm.face_style) {
       default:
         fm.face_style = 'moto360';
@@ -92,6 +132,7 @@
     c.lineWidth = 0;
     c.fillRect(0, 0, r.canvas_width, r.canvas_height);
 
+    // Loop the layers of the watchface and render each layer.
     for (var i in fm.face.watchface) {
       if (fm.face.watchface.hasOwnProperty(i)) {
         r.draw_layer(fm.face.watchface[i]);
@@ -108,7 +149,9 @@
         break;
     }
 
+    $("#diagInfo0").html("onFrame " + onFrame + " skip " + skippedFrames + " FPS " + fpsOutput0);
   };
+
 
   R.prototype.draw_layer = function(layer) {
     var r = this,
@@ -183,7 +226,7 @@
         //This is the default rendering position
         break;
     };
-    
+
     //For rotation, theres a fair amount that needs to be done
     //The easiest way, will be to save the canvas, translate,
     //  rotate, draw, and restore
@@ -191,7 +234,7 @@
     c.translate(x, y);
     c.rotate(rotation * Math.PI / 180);
     c.globalAlpha = opacity / 100;
-    
+
     c.drawImage(image, ox, oy, width, height);
 
     c.restore();

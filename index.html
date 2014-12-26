@@ -9,7 +9,11 @@
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/facemaker.css">
 </head>
+
 <body>
+
+  <div id="diagInfo0">diagInfo0</div>
+
   <nav class="navbar navbar-default" role="navigation">
     <div class="container">
       <div class="navbar-header">
@@ -114,7 +118,7 @@
       <!-- Editor -->
       <div class="col-lg-7 col-lg-pull-5 form-horizontal" id="editor">
       </div>
-  
+
     </div>
     <div class="well well-sm">
       <div class="row">
@@ -174,19 +178,19 @@
   </div>
   <!-- Templates -->
   <script type="text/ractive" id="editor-template" src="templates/editor.html"></script>
-  
+
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  
+
   <script src='js/extern/ractive.js'></script>
   <script src="js/extern/ractive.dynload.js"></script>
-  
+
   <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.0.0/FileSaver.min.js"></script>
-  
+
   <script src="js/extern/date.format.js"></script>
   <script src="js/extern/jszip-utils.min.js"></script>
-  
+
   <script src="js/facemaker.js"></script>
   <script src="js/facemaker.render.js"></script>
   <script src="js/facemaker.helper.js"></script>
@@ -194,7 +198,11 @@
   <script src="js/facemaker.editor.js"></script>
   <script src="js/facemaker.zip.js"></script>
 
+  <script src="/faceFileLive/faceFileMaster.js"></script>
+
   <script>
+     console.log("Hello");
+
     var fm = new FaceMaker({
       editor: '#editor',
       preview: '#preview',
@@ -208,7 +216,7 @@
       }
     }).val("Math_Test_Face.face").trigger("change");
 
-    function load_file_input(e) { 
+    function load_file_input(e) {
       var file = e.target.files[0],
           reader = new FileReader();
 
@@ -228,7 +236,7 @@
     }
 
     $("#load_file").change(load_file_input);
-    
+
     var $load_drop = $("#load_drop");
     $load_drop.on("dragover", function(e) {
       $load_drop.addClass("dropping");
@@ -264,5 +272,6 @@
     fm.magicParse("test $sin(pi*#DWFSS#)>50||sin(pi*#DWFSS#)<60?#DWFSS#+5:2$ value");
   </script>
   <style id="font-config"></style>
+
 </body>
 </html>
