@@ -163,7 +163,9 @@
     "type": "image",
     "width": "0",
     "x": "0",
-    "y": "0"
+    "y": "0",
+    "is_tinted": false,
+    "tint_color": "-1"
   };
 
   FM.BLANK_TEXT = {

@@ -235,14 +235,108 @@
     c.rotate(rotation * Math.PI / 180);
     c.globalAlpha = opacity / 100;
 
+    if (layer.is_tinted)
+    {
+       image = r._tint_image(image, layer.tint_color);
+    };
+
     c.drawImage(image, ox, oy, width, height);
 
     c.restore();
   }
 
-  R.prototype._tint_image = function(image, tint_color) {
-    //Takes an image, returns an image
+  // source: http://www.playmycode.com/blog/2011/06/realtime-image-tinting-on-html5-canvas/
+  R.prototype._tint_image_genRGBKs = function(img) {
+      // function generateRGBKs( img ) {
+        var r = this;
+        var w = img.width;
+        var h = img.height;
+        var rgbks = [];
 
+        var canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage( img, 0, 0 );
+
+        var pixels = ctx.getImageData( 0, 0, w, h ).data;
+
+        // 4 is used to ask for 3 images: red, green, blue and
+        // black in that order.
+        for ( var rgbI = 0; rgbI < 4; rgbI++ ) {
+            var canvas = document.createElement("canvas");
+            canvas.width  = w;
+            canvas.height = h;
+
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage( img, 0, 0 );
+            var to = ctx.getImageData( 0, 0, w, h );
+            var toData = to.data;
+
+            for (
+                    var i = 0, len = pixels.length;
+                    i < len;
+                    i += 4
+            ) {
+                toData[i  ] = (rgbI === 0) ? pixels[i  ] : 0;
+                toData[i+1] = (rgbI === 1) ? pixels[i+1] : 0;
+                toData[i+2] = (rgbI === 2) ? pixels[i+2] : 0;
+                toData[i+3] =                pixels[i+3]    ;
+            }
+
+            ctx.putImageData( to, 0, 0 );
+
+            // image is _slightly_ faster then canvas for this, so convert
+            var imgComp = new Image();
+            imgComp.src = canvas.toDataURL();
+
+            rgbks.push( imgComp );
+        }
+
+        return rgbks;
+    };
+
+  R.prototype._tint_image_doGenerate = function(img, rgbks, red, green, blue) {
+      //function generateTintImage( img, rgbks, red, green, blue ) {
+        var r = this;
+        var buff = document.createElement( "canvas" );
+        buff.width  = img.width;
+        buff.height = img.height;
+
+        var ctx  = buff.getContext("2d");
+
+        ctx.globalAlpha = 1;
+        ctx.globalCompositeOperation = 'copy';
+        ctx.drawImage( rgbks[3], 0, 0 );
+
+        ctx.globalCompositeOperation = 'lighter';
+        if ( red > 0 ) {
+            ctx.globalAlpha = red   / 255.0;
+            ctx.drawImage( rgbks[0], 0, 0 );
+        }
+        if ( green > 0 ) {
+            ctx.globalAlpha = green / 255.0;
+            ctx.drawImage( rgbks[1], 0, 0 );
+        }
+        if ( blue > 0 ) {
+            ctx.globalAlpha = blue  / 255.0;
+            ctx.drawImage( rgbks[2], 0, 0 );
+        }
+
+        return buff;
+    }
+
+  R.prototype._tint_image = function(img, tint_color) {
+    //Takes an image, returns an image
+        var r = this;
+        var rgbks = r._tint_image_genRGBKs( img );
+        var red = (tint_color >> 16) & 0xFF;
+        var green = (tint_color >> 8) & 0xFF;
+        var blue = tint_color & 0xFF;
+        var tintImg = r._tint_image_doGenerate( img, rgbks, red, green, blue );
+
+        return tintImg;
   };
 
   R.prototype._draw_shape = function(layer) {
@@ -265,8 +359,6 @@
     }
 
     c.lineWidth = fm.parseInt(layer.stroke_size) / 2;
-
-
 
 
     switch (layer.shape_type) {
@@ -292,8 +384,8 @@
         c.save()
         // http://www.html5canvastutorials.com/advanced/html5-canvas-transform-rotate-tutorial/
         // translate context to center of canvas
-        // c.translate(r.canvas.width / 2, r.canvas.height / 2);
-        c.translate(x / 2, y / 2);
+        c.translate(r.width / 2, r.height / 2);
+        //c.translate(x / 2, y / 2);
         c.rotate(rotation * Math.PI / 180);
 
         //As far as I can tell, a line is just a rect, and a square is really a rect
