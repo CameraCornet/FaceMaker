@@ -253,6 +253,7 @@
         y = fm.parseInt(layer.y),
         radius = fm.parseInt(layer.radius);
 
+
     /*
      * Some Notes, per Reverse Engineering
      * shape_opt 0 - Fill, 1 - Stroke
@@ -264,6 +265,9 @@
     }
 
     c.lineWidth = fm.parseInt(layer.stroke_size) / 2;
+
+
+
 
     switch (layer.shape_type) {
       case FM.ShapeTypes.circle:
@@ -277,16 +281,30 @@
         }
 
         c.closePath();
-
         break;
+
       case FM.ShapeTypes.square:
       case FM.ShapeTypes.line:
+        var rotation = fm.parseInt(layer.r);
+        //For rotation, theres a fair amount that needs to be done
+        //The easiest way, will be to save the canvas, translate,
+        //  rotate, draw, and restore
+        c.save()
+        // http://www.html5canvastutorials.com/advanced/html5-canvas-transform-rotate-tutorial/
+        // translate context to center of canvas
+        // c.translate(r.canvas.width / 2, r.canvas.height / 2);
+        c.translate(x / 2, y / 2);
+        c.rotate(rotation * Math.PI / 180);
+
         //As far as I can tell, a line is just a rect, and a square is really a rect
         if (layer.shape_opt === 0) {
           c.fillRect(x, y, fm.parseInt(layer.width), fm.parseInt(layer.height));
         } else {
           c.strokeRect(x, y, fm.parseInt(layer.width), fm.parseInt(layer.height));
         }
+
+        c.restore();
+
         break;
 
       case FM.ShapeTypes.triangle:
@@ -315,6 +333,7 @@
           c.fill();
         }
         break;
+
       default:
         break;
     }
