@@ -76,7 +76,7 @@
         paren_depth = 0,
         cond_depth = 0,
         statement = '';
-    
+
     instr = fm.replace_tags(instr)
       .replace('[', '(').replace(']', ')')
       .replace("=", "==")
@@ -88,9 +88,9 @@
       if(instr[i] === '(') {
         paren_depth++;
       }
-      
+
       if(paren_depth === 0) {
-        out += instr[i];        
+        out += instr[i];
       } else {
         statement += instr[i];
       }
@@ -109,7 +109,7 @@
     return out;
   }
 
-  FM.prototype.parseInt = function(instr) { 
+  FM.prototype.parseInt = function(instr) {
     return parseInt(this.parse(instr));
   }
 
@@ -119,15 +119,15 @@
 
     rand: function(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; },
     abs: Math.abs,
-    
+
     cos: Math.cos,
     sin: Math.sin,
     tan: Math.tan,
-    
+
     acos: Math.acos,
     asin: Math.asin,
     atan: Math.atan,
-    
+
     cosh: Math.cosh,
     sinh: Math.sinh,
     tanh: Math.tanh,
@@ -221,7 +221,7 @@
   });
 
   FM.AddFormatTag("Dd", "Day in Month ", function(fm, d, w) {
-    return d.format("w");
+    return d.format("d");
   });
 
   FM.AddFormatTag("DE", "Day of Week ", function(fm, d, w) {
@@ -233,7 +233,7 @@
   });
 
   FM.AddFormatTag("DF", "Day of Week in Month", function(fm, d, w) {
-    return 3; //UNIMPLEMENTED
+    return 3; // ToDo: UNIMPLEMENTED
   });
 
   FM.AddFormatTag("Da", "AM/PM", function(fm, d, w) {
@@ -554,7 +554,7 @@
   });
 
 
-  //I'm putting weather stuff here, I'm not sure if this should be 
+  //I'm putting weather stuff here, I'm not sure if this should be
   // broken out, but it goes with formatting
 
   FM.prototype.init_weather = function() {
@@ -588,13 +588,13 @@
   FM.makeWeatherURL = function(coords) {
     //Now with 100% more yahoo, to match Facer
     var API = "https://query.yahooapis.com/v1/public/yql?format=json&q=",
-        YQL = "SELECT * FROM weather.forecast" + 
+        YQL = "SELECT * FROM weather.forecast" +
               "  WHERE woeid IN " +
-              "    (SELECT woeid FROM geo.placefinder " + 
+              "    (SELECT woeid FROM geo.placefinder " +
               "       WHERE text=\"" + coords.latitude + "," + coords.longitude + "\" AND gflags=\"R\"" +
               "    );",
         url = API + encodeURIComponent(YQL);
-  
+
     return url;
   }
 
