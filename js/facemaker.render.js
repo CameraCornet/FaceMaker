@@ -237,7 +237,12 @@
 
     if (layer.is_tinted)
     {
-       image = r._tint_image(image, layer.tint_color);
+       // cache populate on first hit
+       // Note: this logic assumes that there are no variables/hashtags in the layer.tint_color field
+       if (! fm.face.images[image_hash].hasOwnProperty('imgTint'))
+         fm.face.images[image_hash].imgTint = r._tint_image(image, layer.tint_color);
+
+       image = fm.face.images[image_hash].imgTint;
     };
 
     c.drawImage(image, ox, oy, width, height);
