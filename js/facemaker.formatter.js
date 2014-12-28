@@ -71,6 +71,28 @@
     }
   };
 
+  // source: http://stackoverflow.com/questions/141348/what-is-the-best-way-to-parse-a-time-into-a-date-object-from-user-input-in-javas
+  function parseTimeString(timeString) {
+    if (timeString == '') return null;
+
+    var time = timeString.match(/(\d+)(:(\d\d))?\s*(p?)/i);
+    if (time == null) return null;
+
+    var hours = parseInt(time[1],10);
+    if (hours == 12 && !time[4]) {
+          hours = 0;
+    }
+    else {
+        hours += (hours < 12 && time[4])? 12 : 0;
+    }
+    var d = new Date();
+    d.setHours(hours);
+    d.setMinutes(parseInt(time[3],10) || 0);
+    d.setSeconds(0, 0);
+    return d;
+  };
+
+
   FM.prototype.parse = function(instr) {
     var out = "",
         paren_depth = 0,
@@ -440,6 +462,16 @@
   FM.AddFormatTag("WSUNSET", "Time of sunset", function(fm, d, w) {
     return w.astronomy.sunset;
   });
+
+  FM.AddFormatTag("WSUNRISEH24", "Hour of sunrise 24", function(fm, d, w) {
+	// console.error("WSUNRISEH24 " + parseTimeString(w.astronomy.sunrise).format("H"));
+    return parseTimeString(w.astronomy.sunrise).format("H");
+  });
+
+  FM.AddFormatTag("WSUNSETH24", "Hour of sunset 24", function(fm, d, w) {
+    return parseTimeString(w.astronomy.sunset).format("H");
+  });
+
 
   FM.AddFormatTag("WFAH", "Forecast Day 1 High", function(fm, d, w) {
     return w.list[1].high;
