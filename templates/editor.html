@@ -25,7 +25,7 @@
         <button class="text-danger close" style="width: 25px;" on-click="moveLayerUp">▲</button>
         {{/if}}
         <button class="text-danger close" style="width: 25px;" on-click="setIndexTest">!</button>
-        <a href="#editor-layer-{{index}}" data-toggle="collapse" data-parent="#editor-layers" on-click="set('selectedIndex', {{index}});console.error('clicked {{index}}!');">
+        <a href="#editor-layer-{{index}}" data-toggle="collapse" data-parent="#editor-layers" on-click="setIndexTest">
   				<h4 class="panel-title">Layer {{id}} - {{type}}</h4>
   			</a>
   		</div>
@@ -400,7 +400,7 @@
   	<div class="col-lg-9">
   		<input type="text" value="{{r}}" class="form-control">
   	</div>
-   <div class="showValueR">{{outR}}</div>
+   <div class="showValueR">Layer {{selectedIndex}} Rotation <b>{{outR}}</b></div>
   </div>
   <!-- {{/field_rotation}} -->
 

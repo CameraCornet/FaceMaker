@@ -195,7 +195,7 @@
 
     if (fm.editor.ractive.get("selectedIndex") == layer.id)
     {
-       fm.editor.ractive.set("outR", "Layer " + layer.id + " Rotation: " + rotation);
+       fm.editor.ractive.set("outR", rotation);
     }
 
     switch (layer.alignment) {
@@ -391,7 +391,7 @@
 
         if (fm.editor.ractive.get("selectedIndex") == layer.id)
         {
-            fm.editor.ractive.set("outR", "Layer " + layer.id + " Rotation: " + rotation);
+            fm.editor.ractive.set("outR", rotation);
         }
 
         //For rotation, theres a fair amount that needs to be done
