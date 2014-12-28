@@ -9,6 +9,8 @@
   var fpsCheckupOnFrame = 0;
   var fpsCheckupTimer = null;
   var fpsOutput0="?";
+  var timeJumpMultiplier = 1.0;
+
 
   var calculateCurrentFrameRate = function() {
      // check for revised settings
@@ -22,6 +24,7 @@
     // FPS throttle reference: http://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
     // divide 1000 ms per second by FPS
     fps=$( "#selectFPS" ).val();
+    timeJumpMultiplier=$( "#selectTimeJump" ).val();
     fpsInterval=1000/fps;
     then=Date.now();
     startTime=then;

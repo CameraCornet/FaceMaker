@@ -84,10 +84,11 @@ var FaceMaker = (function() {
     fm.use_test_date_time = false;
     fm.test_low_power_mode = false;
     fm.test_date_time = new Date();
+    fm.test_date_timeJump = 1.0;
 
     $("#low_power_mode").click(this.toggle_low_power_mode.bind(this));
     $("#fake_date_time").click(this.toggle_fake_date_time.bind(this));
-    $("#fake_date, #fake_time").change(this.update_fake_date_time.bind(this));
+    $("#fake_date, #fake_time, #selectTimeJump, #selectFPS").change(this.update_fake_date_time.bind(this));
     $("#face_style").change(this.change_face_style.bind(this));
     $("#battery").change(this.update_battery.bind(this));
   };
@@ -102,7 +103,7 @@ var FaceMaker = (function() {
 
     fm.face_style = e.target.value;
   };
-  
+
   FM.prototype.toggle_low_power_mode = function(e) {
     var fm = this;
 
@@ -121,7 +122,8 @@ var FaceMaker = (function() {
         fake_time = $("#fake_time").val();
 
     fm.test_date_time = new Date(fake_date + " " + fake_time);
-  };  
+    fm.test_date_timeJump = $("#selectTimeJump").val();
+  };
 
   FM.prototype.update_battery = function(e) {
     var fm = this;

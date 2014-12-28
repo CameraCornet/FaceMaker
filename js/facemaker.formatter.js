@@ -8,6 +8,9 @@
   var dg = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
   var tn = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
   var tw = ['twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+  var timeBase = new Date(0);
+  var timeBaseChangeCount = 0;
+  var timeBaseWhen = new Date(0);
 
   function toWords(s) {
       s = s.toString();
@@ -178,6 +181,23 @@
 
     if(fm.use_test_date_time) {
       d = fm.test_date_time;
+
+      // Has the user altered the time?
+      if (d != timeBase)
+      {
+         timeBase = d;
+         timeBaseWhen = new Date();
+         timeBaseChangeCount++;
+         $("#timeJumpOut0").html("timeBaseChange " + timeBaseChangeCount);
+      };
+
+      if (fm.test_date_timeJump != 0.0)
+      {
+         var freshDate = new Date();
+         var elapsedMillis = freshDate.getTime() - timeBaseWhen.getTime();
+         d = new Date(d.getTime() + elapsedMillis * fm.test_date_timeJump);
+         $("#timeJumpOut1").html("elapsedMillis " + elapsedMillis + " factor " + fm.test_date_timeJump);
+      };
     } else {
       d = new Date();
     }
