@@ -119,12 +119,14 @@
                 <input type='date' class="form-control" id="fake_date">
               </div>
             </div>
+
             <div class="form-group">
               <label class="control-label col-lg-4">Fake time</label>
               <div class="col-lg-8">
                 <input type="time" class="form-control" id="fake_time">
               </div>
             </div>
+
             <div class="form-group">
               <label class="control-label col-lg-4">Time Jump</label>
               <div class="col-lg-8">
@@ -155,6 +157,7 @@
                  </select>
                  <div id="timeJumpOut0">timeJumpOut0</div>
                  <div id="timeJumpOut1">timeJumpOut1</div>
+              </div>
             </div>
 
             <div class="form-group">
@@ -267,11 +270,7 @@
   <script src="js/facemaker.editor.js"></script>
   <script src="js/facemaker.zip.js"></script>
 
-  <script src="/faceFileLive/faceFileMaster.js"></script>
-
   <script>
-     console.log("Hello");
-
     var fm = new FaceMaker({
       editor: '#editor',
       preview: '#preview',
@@ -338,13 +337,8 @@
     });
 
     fm.renderer.stop_rendering();
-    try {
-       fm.magicParse("test $sin(pi*#DWFSS#)>50||sin(pi*#DWFSS#)<60?#DWFSS#+5:2$ value");
-    } catch(err0) {
-       console.error("magicParse exception");
-    };
+    fm.magicParse("test $sin(pi*#DWFSS#)>50||sin(pi*#DWFSS#)<60?#DWFSS#+5:2$ value");
   </script>
   <style id="font-config"></style>
-
 </body>
 </html>
