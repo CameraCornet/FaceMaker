@@ -4,15 +4,45 @@
   var onFrameRendered = 0;
   var skippedFrames = 0;
   var fps,fpsInterval,startTime,now,then,elapsed;
+  var previousfps = 0;
   var fpsCheckupOnFrame = 0;
   var fpsCheckupTimer = null;
   var fpsOutput0="?";
 
   var calculateCurrentFrameRate = function() {
+     // check for revised settings
+     establishFrameRateFromSetting();
      // 3000ms measurement period
      fpsOutput0 = (onFrameRendered - fpsCheckupOnFrame) / 3;
      fpsCheckupOnFrame = onFrameRendered;
   };
+
+  var establishFrameRateFromSetting = function() {
+    // FPS throttle reference: http://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
+    // divide 1000 ms per second by FPS
+    fps=$( "#selectFPS" ).val();
+    fpsInterval=1000/fps;
+    then=Date.now();
+    startTime=then;
+    if (fps != previousfps)
+    {
+       if (fpsCheckupTimer != null)
+       {
+          clearInterval(fpsCheckupTimer);
+          fpsCheckupTimer = null;
+       };
+    };
+
+    if (fpsCheckupTimer == null) {
+       previousfps=fps;
+       fpsInterval=1000/fps;
+       var checkupInterval=3000;
+       if (fps < 0.5)
+          checkupInterval=60000;
+       $("#diagInfo1").html(" <i>set FPS " + fps + " checkup " + checkupInterval + " fpsInterval " + fpsInterval + "</i>");
+       fpsCheckupTimer = setInterval(calculateCurrentFrameRate, checkupInterval);
+    };
+   };
 
   var R = function(fm) {
     var r = this;
@@ -53,15 +83,7 @@
   R.prototype.start_rendering = function() {
     var r = this;
 
-    // FPS throttle reference: http://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
-    // divide 1000 ms per second by FPS
-    fps=30;
-    fpsInterval=1000/fps;
-    then=Date.now();
-    startTime=then;
-    if (fpsCheckupTimer == null) {
-       fpsCheckupTimer = setInterval(calculateCurrentFrameRate, 3000);
-    };
+    establishFrameRateFromSetting();
 
     r.rendering = true;
     requestAnimationFrame(r.render.bind(r));
@@ -105,7 +127,6 @@
 
     //For the moment, we use a 320px radius circle for clipping, per Moto 360
     c.save();
-
 
     c.beginPath();
 
