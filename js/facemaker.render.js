@@ -5,6 +5,7 @@
   var skippedFrames = 0;
   var fps,fpsInterval,startTime,now,then,elapsed;
   var previousfps = 0;
+  var onCheckup = 0;
   var fpsCheckupOnFrame = 0;
   var fpsCheckupTimer = null;
   var fpsOutput0="?";
@@ -34,12 +35,13 @@
     };
 
     if (fpsCheckupTimer == null) {
+       onCheckup++;
        previousfps=fps;
        fpsInterval=1000/fps;
        var checkupInterval=3000;
        if (fps < 0.5)
           checkupInterval=60000;
-       $("#diagInfo1").html(" <i>set FPS " + fps + " checkup " + checkupInterval + " fpsInterval " + fpsInterval + "</i>");
+       $("#diagInfo1").html(" <i>set FPS " + fps + " checkup " + checkupInterval + " fpsInterval " + fpsInterval + " onCheckup " + onCheckup + "</i>");
        fpsCheckupTimer = setInterval(calculateCurrentFrameRate, checkupInterval);
     };
    };
