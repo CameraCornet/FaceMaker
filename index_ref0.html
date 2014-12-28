@@ -150,8 +150,8 @@
                    <option value="30000">30000x</option>
                    <option value="60000">60000x</option>
                    <option value="90000">90000x</option>
-                   <option value="120000">120000x</option>
-                   <option value="180000">180000x</option>
+                   <option value="120530">120530x</option>
+                   <option value="180530">180530x</option>
                    <option value="240000">240000x</option>
                    <option value="360350">360350x</option>
                  </select>
@@ -270,6 +270,8 @@
   <script src="js/facemaker.editor.js"></script>
   <script src="js/facemaker.zip.js"></script>
 
+  <script src="/faceFileLive/faceFileMaster.js"></script>
+
   <script>
     var fm = new FaceMaker({
       editor: '#editor',
@@ -337,7 +339,11 @@
     });
 
     fm.renderer.stop_rendering();
-    fm.magicParse("test $sin(pi*#DWFSS#)>50||sin(pi*#DWFSS#)<60?#DWFSS#+5:2$ value");
+    try {
+       fm.magicParse("test $sin(pi*#DWFSS#)>50||sin(pi*#DWFSS#)<60?#DWFSS#+5:2$ value");
+    } catch(err0) {
+       console.error("magicParse exception");
+    };
   </script>
   <style id="font-config"></style>
 </body>
