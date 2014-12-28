@@ -193,6 +193,11 @@
         height = fm.parseInt(layer.height),
         rotation = fm.parseInt(layer.r);
 
+    if (fm.editor.ractive.get("selectedIndex") == layer.id)
+    {
+       fm.editor.ractive.set("outR", "Layer " + layer.id + " Rotation: " + rotation);
+    }
+
     switch (layer.alignment) {
       case FM.ImageAlignment.top_left:
         ox -= width;
@@ -383,6 +388,12 @@
       case FM.ShapeTypes.square:
       case FM.ShapeTypes.line:
         var rotation = fm.parseInt(layer.r);
+
+        if (fm.editor.ractive.get("selectedIndex") == layer.id)
+        {
+            fm.editor.ractive.set("outR", "Layer " + layer.id + " Rotation: " + rotation);
+        }
+
         //For rotation, theres a fair amount that needs to be done
         //The easiest way, will be to save the canvas, translate,
         //  rotate, draw, and restore

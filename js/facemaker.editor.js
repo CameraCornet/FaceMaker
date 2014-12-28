@@ -62,6 +62,11 @@
       fm.face.watchface.splice(event.index.index, 1);
     });
 
+    r.on('setIndexTest', function(event, method) {
+      r.set('selectedIndex', event.index.index);
+      console.error('setIndexTest selectedIndex ' + r.get('selectedIndex') + ' index? ' + r.get('index'));
+    });
+
     r.on('moveLayerUp', function(event, method) {
       var path = event.keypath.substring(0, event.keypath.lastIndexOf(".") + 1),
           index = event.index.index;
